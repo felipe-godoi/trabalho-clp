@@ -3,42 +3,22 @@ package com.clp.trabalho;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 
-import java.security.InvalidKeyException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import com.fazecast.jSerialComm.*;
 
 public class ProcessarController {
     @FXML
     private TextArea processarInput;
     public List<Character> palavrasReservadas = Arrays.asList('+', '*', '!', '=', '('   );
-    public Map<String, Boolean> inputs = new HashMap<String, Boolean>() {{
-       put("I1", false);
-       put("I2", true);
-       put("I3", false);
-       put("I4", false);
-       put("I5", false);
-       put("I6", false);
-       put("I7", false);
-       put("I8", false);
-       put("I9", false);
-    }};
-    public Map<String, Boolean> outputs = new HashMap<String, Boolean>() {{
-       put("O1", false);
-       put("O2", false);
-       put("O3", false);
-       put("O4", false);
-       put("O5", false);
-       put("O6", false);
-       put("O7", false);
-       put("O8", false);
-    }};
-    public Map<String, Boolean> variaveis = new HashMap<String, Boolean>();
 
     @FXML
     protected void onProcessarButtonClick() {
         String[] input = processarInput.getText().split("\n");
+
+        if (input[0].length() == 0) {
+            return;
+        }
 
         for (int i = 0; i < input.length; i++) {
             String[] splitted = input[i].split("->");
@@ -46,17 +26,61 @@ public class ProcessarController {
             String output = splitted[1].replace(" ", "");
 
             boolean result = processarExpressao(texto);
-            System.out.println(result);
 
-            if (outputs.containsKey(output)) {
-                outputs.put(output, result);
+            if (Status.outputs.containsKey(output)) {
+                Status.outputs.put(output, result);
             } else {
-                variaveis.put(output, result);
+                Status.variaveis.put(output, result);
             }
         }
 
-        System.out.println(outputs);
-        System.out.println(variaveis);
+        System.out.println(Status.inputs);
+        System.out.println(Status.outputs);
+        System.out.println(Status.variaveis);
+    }
+
+    @FXML
+    protected void onEnviarButtonClick(){
+        SerialPort comPort = SerialPort.getCommPorts()[1];
+        comPort.openPort();
+
+        Set<String> keys = Status.outputs.keySet();
+        String output = "";
+
+        for (String key: keys) {
+            Boolean value = Status.outputs.get(key);
+
+            if (value) {
+                output += "1";
+            } else {
+                output += "0";
+            }
+        }
+
+        comPort.writeBytes(output.getBytes(), output.length());
+        comPort.closePort();
+    }
+
+    @FXML
+    public static void lerInputs(){
+        SerialPort comPort = SerialPort.getCommPorts()[1];
+        comPort.openPort();
+
+        comPort.writeBytes(new byte[]{'2', '7', '0'}, 3);
+        comPort.addDataListener(new SerialPortDataListener() {
+            @Override
+            public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_RECEIVED; }
+            @Override
+            public void serialEvent(SerialPortEvent event)
+            {
+                String inputs = "";
+                byte[] newData = event.getReceivedData();
+                for (int i = 0; i < newData.length; ++i)
+                    inputs += (char)newData[i];
+
+                Status.initializeStatus(inputs);
+            }
+        });
     }
 
     protected String converterInput(String texto) {
@@ -94,12 +118,12 @@ public class ProcessarController {
     }
 
     protected boolean getValue(String key) {
-        if (inputs.containsKey(key)) {
-            return inputs.get(key);
-        } else if (outputs.containsKey(key)) {
-            return outputs.get(key);
-        } else if (variaveis.containsKey(key)) {
-            return variaveis.get(key);
+        if (Status.inputs.containsKey(key)) {
+            return Status.inputs.get(key);
+        } else if (Status.outputs.containsKey(key)) {
+            return Status.outputs.get(key);
+        } else if (Status.variaveis.containsKey(key)) {
+            return Status.variaveis.get(key);
         }
 
         throw new IllegalStateException("Unexpected value: " + key);

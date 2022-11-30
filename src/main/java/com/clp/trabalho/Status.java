@@ -1,5 +1,7 @@
 package com.clp.trabalho;
 
+import com.fazecast.jSerialComm.SerialPort;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,33 +30,40 @@ public class Status {
         put("O8", false);
     }};
     public static Map<String, Boolean> variaveis = new HashMap<String, Boolean>();
+    public static SerialPort comPort;
+
+    public static String[] textareaInput = {""};
+
+    public static void connectPort() {
+        comPort = SerialPort.getCommPorts()[0];
+        comPort.openPort();
+    }
 
     public static void initializeStatus(String inputString) {
+        inputString = inputString.strip();
+
         inputs.clear();
-        outputs.clear();
         variaveis.clear();
 
-        outputs.put("O1", false);
-        outputs.put("O2", false);
-        outputs.put("O3", false);
-        outputs.put("O4", false);
-        outputs.put("O5", false);
-        outputs.put("O6", false);
-        outputs.put("O7", false);
-        outputs.put("O8", false);
-
+        int j = inputString.length();
         for (int i = 0; i < inputString.length(); i++){
             char input = inputString.charAt(i);
 
+            String inputKey = "I"+ j;
+
             if (input == '1') {
-                inputs.put("I"+ (i+1), true);
+                inputs.put(inputKey, true);
             } else {
-                inputs.put("I"+ (i+1), false);
+                inputs.put(inputKey, false);
             }
+
+            j--;
         }
 
+        inputs.put("1", true);
+        inputs.put("0", false);
 
-
-        System.out.println(inputs);
+        ProcessarController.processarInput(Status.textareaInput);
+        ProcessarController.enviarOutputs();
     }
 }

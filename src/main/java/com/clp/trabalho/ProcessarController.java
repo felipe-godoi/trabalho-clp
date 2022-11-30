@@ -10,12 +10,16 @@ import com.fazecast.jSerialComm.*;
 public class ProcessarController {
     @FXML
     private TextArea processarInput;
-    public List<Character> palavrasReservadas = Arrays.asList('+', '*', '!', '=', '('   );
+    public static List<Character> palavrasReservadas = Arrays.asList('+', '*', '!', '=', '('   );
 
     @FXML
     protected void onProcessarButtonClick() {
-        String[] input = processarInput.getText().split("\n");
+        Status.textareaInput = processarInput.getText().split("\n");
 
+        ProcessarController.processarInput(Status.textareaInput);
+    }
+
+    protected static void processarInput(String[] input) {
         if (input[0].length() == 0) {
             return;
         }
@@ -33,22 +37,20 @@ public class ProcessarController {
                 Status.variaveis.put(output, result);
             }
         }
-
-        System.out.println(Status.inputs);
-        System.out.println(Status.outputs);
-        System.out.println(Status.variaveis);
     }
 
     @FXML
     protected void onEnviarButtonClick(){
-        SerialPort comPort = SerialPort.getCommPorts()[1];
-        comPort.openPort();
+        enviarOutputs();
+    }
 
+    public static void enviarOutputs() {
         Set<String> keys = Status.outputs.keySet();
         String output = "";
 
-        for (String key: keys) {
-            Boolean value = Status.outputs.get(key);
+        for (int i = 8; i > 0; i--) {
+            String outputKey = "O" + i;
+            Boolean value = Status.outputs.get(outputKey);
 
             if (value) {
                 output += "1";
@@ -57,17 +59,32 @@ public class ProcessarController {
             }
         }
 
-        comPort.writeBytes(output.getBytes(), output.length());
-        comPort.closePort();
+        String decOutput = binToDec(output);
+
+        if (decOutput.equals("0")) {
+            decOutput = "260";
+        }
+
+        Status.comPort.writeBytes(decOutput.getBytes(), decOutput.length());
+    }
+
+    public static String binToDec(String bin) {
+        int sum = 0;
+        int j = 1;
+        for (int i = 7; i >= 0; i --) {
+            if (bin.charAt(i) == '1') {
+                sum += j;
+            }
+
+            j = j*2;
+        }
+
+        return String.valueOf(sum);
     }
 
     @FXML
     public static void lerInputs(){
-        SerialPort comPort = SerialPort.getCommPorts()[1];
-        comPort.openPort();
-
-        comPort.writeBytes(new byte[]{'2', '7', '0'}, 3);
-        comPort.addDataListener(new SerialPortDataListener() {
+        Status.comPort.addDataListener(new SerialPortDataListener() {
             @Override
             public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_RECEIVED; }
             @Override
@@ -81,13 +98,15 @@ public class ProcessarController {
                 Status.initializeStatus(inputs);
             }
         });
+
+        Status.comPort.writeBytes(new byte[]{'2', '7', '0'}, 3);
     }
 
-    protected String converterInput(String texto) {
+    protected static String converterInput(String texto) {
         return texto.replace("&&", "*").replace("||", "+").replace(" ", "");
     }
 
-    protected int getConteudoParenteses(String texto) {
+    protected static int getConteudoParenteses(String texto) {
         int abrindo = 0;
         int fechando = 0;
 
@@ -108,8 +127,7 @@ public class ProcessarController {
         return 0;
     }
 
-    protected boolean avaliarExpressao(boolean valorEsquerda, char operador, boolean valorDireita) {
-        System.out.println(String.valueOf(valorEsquerda) + operador + valorDireita);
+    protected static boolean avaliarExpressao(boolean valorEsquerda, char operador, boolean valorDireita) {
         if (operador == '*') {
             return valorEsquerda && valorDireita;
         } else {
@@ -117,7 +135,7 @@ public class ProcessarController {
         }
     }
 
-    protected boolean getValue(String key) {
+    protected static boolean getValue(String key) {
         if (Status.inputs.containsKey(key)) {
             return Status.inputs.get(key);
         } else if (Status.outputs.containsKey(key)) {
@@ -129,9 +147,8 @@ public class ProcessarController {
         throw new IllegalStateException("Unexpected value: " + key);
     }
 
-    protected boolean processarExpressao(String texto) {
-        System.out.println(texto);
-
+    protected static boolean processarExpressao(String texto) {
+        System.out.println(Status.outputs);
         String bufferEsquerda = "";
         String bufferDireita = "";
         boolean inverter = false;
@@ -247,7 +264,7 @@ public class ProcessarController {
 
         if (bufferDireita != "") {
             if (bufferDireita.contains("!")) {
-                valorDireita = !getValue(bufferDireita);
+                valorDireita = !getValue(bufferDireita.replace("!", ""));
             } else {
                 valorDireita = getValue(bufferDireita);
             }

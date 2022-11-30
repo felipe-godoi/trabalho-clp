@@ -6,11 +6,12 @@ import javafx.scene.control.TextArea;
 import java.util.*;
 
 import com.fazecast.jSerialComm.*;
+import javafx.scene.input.KeyEvent;
 
 public class ProcessarController {
     @FXML
     private TextArea processarInput;
-    public static List<Character> palavrasReservadas = Arrays.asList('+', '*', '!', '=', '('   );
+    public static List<Character> palavrasReservadas = Arrays.asList('+', '*', '!', '=', '(',  ')');
 
     @FXML
     protected void onProcessarButtonClick() {
@@ -45,7 +46,6 @@ public class ProcessarController {
     }
 
     public static void enviarOutputs() {
-        Set<String> keys = Status.outputs.keySet();
         String output = "";
 
         for (int i = 8; i > 0; i--) {
@@ -59,13 +59,7 @@ public class ProcessarController {
             }
         }
 
-        String decOutput = binToDec(output);
-
-        if (decOutput.equals("0")) {
-            decOutput = "260";
-        }
-
-        Status.comPort.writeBytes(decOutput.getBytes(), decOutput.length());
+        Status.comPort.writeBytes(output.getBytes(), output.length());
     }
 
     public static String binToDec(String bin) {
@@ -99,7 +93,7 @@ public class ProcessarController {
             }
         });
 
-        Status.comPort.writeBytes(new byte[]{'2', '7', '0'}, 3);
+        Status.comPort.writeBytes(new byte[]{'1', '0', '0', '0', '0', '1', '1', '1', '0'}, 9);
     }
 
     protected static String converterInput(String texto) {
@@ -148,7 +142,6 @@ public class ProcessarController {
     }
 
     protected static boolean processarExpressao(String texto) {
-        System.out.println(Status.outputs);
         String bufferEsquerda = "";
         String bufferDireita = "";
         boolean inverter = false;

@@ -15,6 +15,7 @@ public class ProcessarApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(ProcessarApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 780, 500);
         stage.setTitle("CLP Programmer");
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }

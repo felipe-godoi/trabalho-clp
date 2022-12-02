@@ -34,9 +34,18 @@ public class Status {
 
     public static String[] textareaInput = {""};
 
-    public static void connectPort() {
-        comPort = SerialPort.getCommPorts()[0];
-        comPort.openPort();
+    public static void connectPort() throws Exception {
+        SerialPort[] comPorts = SerialPort.getCommPorts();
+        for(SerialPort port : comPorts){
+            if(port.getPortDescription().equals("USB2.0-Serial")){
+                comPort = port;
+            }
+        }
+
+        if(comPort != null)
+            comPort.openPort();
+        else
+            throw new Exception("Arduino não encontrado");
     }
 
     public static void resetOutput() {

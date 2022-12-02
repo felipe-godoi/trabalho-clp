@@ -109,17 +109,18 @@ public class ProcessarController {
 
     protected static void processarInput(String[] input) {
         Status.variaveis.clear();
+        if (input[0].length() != 0) {
+            for (int i = 0; i < input.length; i++) {
+                String[] splitted = input[i].split("->");
+                String texto = converterInput(splitted[0].replace(" ", ""));
+                String output = splitted[1].replace(" ", "");
+                boolean result = processarExpressao(texto);
 
-        for (int i = 0; i < input.length; i++) {
-            String[] splitted = input[i].split("->");
-            String texto = converterInput(splitted[0].replace(" ", ""));
-            String output = splitted[1].replace(" ", "");
-            boolean result = processarExpressao(texto);
-
-            if (Status.outputs.containsKey(output)) {
-                Status.outputs.put(output, result);
-            } else {
-                Status.variaveis.put(output, result);
+                if (Status.outputs.containsKey(output)) {
+                    Status.outputs.put(output, result);
+                } else {
+                    Status.variaveis.put(output, result);
+                }
             }
         }
     }

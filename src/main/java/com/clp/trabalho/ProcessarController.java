@@ -1,6 +1,7 @@
 package com.clp.trabalho;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import com.fazecast.jSerialComm.*;
 
@@ -20,6 +21,9 @@ public class ProcessarController {
     @FXML
     private TextArea variaveis;
 
+    @FXML
+    private Label hadEdit;
+
     public static List<Character> palavrasReservadas = Arrays.asList('+', '*', '!', '=', '(',  ')');
 
     @FXML
@@ -34,11 +38,37 @@ public class ProcessarController {
     protected void onProcessarButtonClick() {
         Status.textareaInput = processarInput.getText().split("\n");
 
+        hadEdit.setText("");
         ProcessarController.processarInput(Status.textareaInput);
         initialize();
     }
 
+    @FXML
+    protected void checkarAlteracoes() {
+        var anterior = Status.textareaInput;
+        var atual = processarInput.getText().split("\n");
+
+        if(concatenar(anterior).equals(concatenar(atual)))
+        {
+            hadEdit.setText("");
+        }
+        else {
+            hadEdit.setText("*");
+        }
+    }
+
+    public String concatenar(String[] toConcatena)
+    {
+        var retorno = "";
+        for (String concatena: toConcatena)
+        {
+            retorno += concatena;
+        }
+        return (retorno);
+    }
+
     protected static void processarInput(String[] input) {
+        Status.variaveis.clear();
         if (input[0].length() == 0) {
             JOptionPane.showMessageDialog(null,
                     "Por favor, digite o código.",
@@ -51,9 +81,8 @@ public class ProcessarController {
             for (int i = 0; i < input.length; i++) {
                 String[] splitted = input[i].split("->");
                 String texto = converterInput(splitted[0].replace(" ", ""));
-                String output = splitted[0].replace(" ", "");
-                boolean result = false;
-                    result = processarExpressao(texto);
+                String output = splitted[1].replace(" ", "");
+                boolean result = processarExpressao(texto);
 
                 if (Status.outputs.containsKey(output)) {
                     Status.outputs.put(output, result);
@@ -152,9 +181,9 @@ public class ProcessarController {
             Boolean value = Status.inputs.get(inputKey);
 
             if (value) {
-                entradaToSet += "I"+(i+1)+" => Ligada\n";
+                entradaToSet += inputKey+" => Ligada\n";
             } else {
-                entradaToSet += "I"+(i+1)+" => Desligada\n";
+                entradaToSet += inputKey+" => Desligada\n";
             }
         }
         return(entradaToSet);
@@ -169,9 +198,9 @@ public class ProcessarController {
             Boolean value = Status.outputs.get(outputKey);
 
             if (value) {
-                saidaToSet += "I"+(i+1)+" => Ligada\n";
+                saidaToSet += outputKey+" => Ligada\n";
             } else {
-                saidaToSet += "I"+(i+1)+" => Desligada\n";
+                saidaToSet += outputKey+" => Desligada\n";
             }
         }
 
@@ -179,16 +208,15 @@ public class ProcessarController {
     }
     protected static String getVariaveis() {
 
-        System.out.println(Status.variaveis);
         String variaveisToSet = "";
         for (String var: Status.variaveis.keySet())
         {
             Boolean value = Status.variaveis.get(var);
 
             if (value) {
-                variaveisToSet += var + " => " + value + "\n";
+                variaveisToSet += var + " => Ligada\n";
             } else {
-                variaveisToSet += var + " => " + value + "\n";
+                variaveisToSet += var + " => Desligada\n";
             }
         }
 

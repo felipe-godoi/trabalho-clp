@@ -43,6 +43,11 @@ public class ProcessarController {
             hadEdit.setText("");
             ProcessarController.processarInput(Status.textareaInput);
             initialize();
+
+            JOptionPane.showMessageDialog(null,
+                    "Código compilado com Sucesso!",
+                    "SUCESSO",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
         catch (Exception error)
         {
@@ -76,10 +81,6 @@ public class ProcessarController {
         else {
             hadEdit.setText("*");
         }
-        JOptionPane.showMessageDialog(null,
-                    "Código compilado com Sucesso!",
-                    "SUCESSO",
-                    JOptionPane.INFORMATION_MESSAGE);
 
     }
 

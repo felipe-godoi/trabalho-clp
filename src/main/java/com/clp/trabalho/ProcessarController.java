@@ -430,7 +430,7 @@ public class ProcessarController {
                                 "</div>" +
                                 "<br/>" +
                                 "<div>" +
-                                    "<b>• Símbolos Reservados: </b> '(' e ')' para priorizar, '&&' usados como 'and', '||' usados como 'or' e '!' para negar a senteça seguinte." +
+                                    "<b>• Símbolos Reservados: </b> '(' e ')' para priorizar, '&&' ou '*' usados como 'and', '||' ou '+' usados como 'or' e '!' para negar a senteça seguinte." +
                                 "</div>" +
                                 "<br/>" +
                                 "<div>" +

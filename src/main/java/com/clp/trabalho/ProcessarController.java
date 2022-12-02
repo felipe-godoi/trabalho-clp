@@ -49,12 +49,36 @@ public class ProcessarController {
         var anterior = Status.textareaInput;
         var atual = processarInput.getText().split("\n");
 
-        if(concatenar(anterior).equals(concatenar(atual)))
-        {
-            hadEdit.setText("");
+        try {
+            if(concatenar(anterior).equals(concatenar(atual)))
+            {
+                hadEdit.setText("");
+            }
+            else {
+                hadEdit.setText("*");
+            }
+            JOptionPane.showMessageDialog(null,
+                        "Código compilado com Sucesso!",
+                        "SUCESSO",
+                        JOptionPane.INFORMATION_MESSAGE);
         }
-        else {
-            hadEdit.setText("*");
+        catch (Exception error)
+        {
+            if(error.getMessage().contains("Unexpected value"))
+            {
+                JOptionPane.showMessageDialog(null,
+                        "Código não identificado, verifique-o novamente.",
+                        "ERRO",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null,
+                        "Houve um erro, por favor tente novamente.",
+                        "ERRO",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+            System.out.println("Erro identificado: " + error);
         }
     }
 
@@ -78,41 +102,17 @@ public class ProcessarController {
             return;
         }
 
-        try {
-            for (int i = 0; i < input.length; i++) {
-                String[] splitted = input[i].split("->");
-                String texto = converterInput(splitted[0].replace(" ", ""));
-                String output = splitted[1].replace(" ", "");
-                boolean result = processarExpressao(texto);
+        for (int i = 0; i < input.length; i++) {
+            String[] splitted = input[i].split("->");
+            String texto = converterInput(splitted[0].replace(" ", ""));
+            String output = splitted[1].replace(" ", "");
+            boolean result = processarExpressao(texto);
 
-                if (Status.outputs.containsKey(output)) {
-                    Status.outputs.put(output, result);
-                } else {
-                    Status.variaveis.put(output, result);
-                }
+            if (Status.outputs.containsKey(output)) {
+                Status.outputs.put(output, result);
+            } else {
+                Status.variaveis.put(output, result);
             }
-            JOptionPane.showMessageDialog(null,
-                    "Código compilado com Sucesso!",
-                    "SUCESSO",
-                    JOptionPane.INFORMATION_MESSAGE);
-        }
-        catch (Exception error)
-        {
-            if(error.getMessage().contains("Unexpected value"))
-            {
-                JOptionPane.showMessageDialog(null,
-                        "Código não identificado, verifique-o novamente.",
-                        "ERRO",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(null,
-                        "Houve um erro, por favor tente novamente.",
-                        "ERRO",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-            System.out.println("Erro identificado: " + error);
         }
     }
 

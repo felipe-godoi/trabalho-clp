@@ -10,7 +10,7 @@ public class Status {
         put("0", false);
         put("1", true);
         put("I1", false);
-        put("I2", true);
+        put("I2", false);
         put("I3", false);
         put("I4", false);
         put("I5", false);

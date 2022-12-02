@@ -13,7 +13,7 @@ public class ProcessarApplication extends Application {
         Status.connectPort();
 
         FXMLLoader fxmlLoader = new FXMLLoader(ProcessarApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        Scene scene = new Scene(fxmlLoader.load(), 780, 500);
         stage.setTitle("CLP Programmer");
         stage.setScene(scene);
         stage.show();

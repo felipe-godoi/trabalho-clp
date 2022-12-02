@@ -2,47 +2,94 @@ package com.clp.trabalho;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
+import com.fazecast.jSerialComm.*;
 
+import javax.swing.*;
 import java.util.*;
 
-import com.fazecast.jSerialComm.*;
-import javafx.scene.input.KeyEvent;
+import static javax.swing.JOptionPane.showMessageDialog;
 
 public class ProcessarController {
     @FXML
     private TextArea processarInput;
+
+    @FXML
+    private TextArea entradas;
+    @FXML
+    private TextArea saidas;
+    @FXML
+    private TextArea variaveis;
+
     public static List<Character> palavrasReservadas = Arrays.asList('+', '*', '!', '=', '(',  ')');
+
+    @FXML
+    public void initialize()
+    {
+        entradas.setText(getEntradas());
+        saidas.setText(getSaidas());
+        variaveis.setText(getVariaveis());
+    }
 
     @FXML
     protected void onProcessarButtonClick() {
         Status.textareaInput = processarInput.getText().split("\n");
 
         ProcessarController.processarInput(Status.textareaInput);
+        initialize();
     }
 
     protected static void processarInput(String[] input) {
         if (input[0].length() == 0) {
+            JOptionPane.showMessageDialog(null,
+                    "Por favor, digite o código.",
+                    "ALERTA",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        for (int i = 0; i < input.length; i++) {
-            String[] splitted = input[i].split("->");
-            String texto = converterInput(splitted[0].replace(" ", ""));
-            String output = splitted[1].replace(" ", "");
+        try {
+            for (int i = 0; i < input.length; i++) {
+                String[] splitted = input[i].split("->");
+                String texto = converterInput(splitted[0].replace(" ", ""));
+                String output = splitted[0].replace(" ", "");
+                boolean result = false;
+                    result = processarExpressao(texto);
 
-            boolean result = processarExpressao(texto);
-
-            if (Status.outputs.containsKey(output)) {
-                Status.outputs.put(output, result);
-            } else {
-                Status.variaveis.put(output, result);
+                if (Status.outputs.containsKey(output)) {
+                    Status.outputs.put(output, result);
+                } else {
+                    Status.variaveis.put(output, result);
+                }
             }
+            JOptionPane.showMessageDialog(null,
+                    "Código compilado com Sucesso!",
+                    "SUCESSO",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
+        catch (Exception error)
+        {
+            if(error.getMessage().contains("Unexpected value"))
+            {
+                JOptionPane.showMessageDialog(null,
+                        "Código não identificado, verifique-o novamente.",
+                        "ERRO",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null,
+                        "Houve um erro, por favor tente novamente.",
+                        "ERRO",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+            System.out.println("Erro identificado: " + error);
         }
     }
 
     @FXML
-    protected void onEnviarButtonClick(){
-        enviarOutputs();
+    protected void onResetarButtonClick(){
+        processarInput.setText("");
+        lerInputs();
     }
 
     public static void enviarOutputs() {
@@ -92,8 +139,60 @@ public class ProcessarController {
                 Status.initializeStatus(inputs);
             }
         });
-
         Status.comPort.writeBytes(new byte[]{'1', '0', '0', '0', '0', '1', '1', '1', '0'}, 9);
+    }
+
+
+    protected static String getEntradas() {
+
+        String entradaToSet = "";
+
+        for (int i = 0; i < 9; i++) {
+            String inputKey = "I" + (i+1);
+            Boolean value = Status.inputs.get(inputKey);
+
+            if (value) {
+                entradaToSet += "I"+(i+1)+" => Ligada\n";
+            } else {
+                entradaToSet += "I"+(i+1)+" => Desligada\n";
+            }
+        }
+        return(entradaToSet);
+    }
+
+    protected static String getSaidas() {
+
+        String saidaToSet = "";
+
+        for (int i = 0; i < 8; i++) {
+            String outputKey = "O" + (i+1);
+            Boolean value = Status.outputs.get(outputKey);
+
+            if (value) {
+                saidaToSet += "I"+(i+1)+" => Ligada\n";
+            } else {
+                saidaToSet += "I"+(i+1)+" => Desligada\n";
+            }
+        }
+
+        return(saidaToSet);
+    }
+    protected static String getVariaveis() {
+
+        System.out.println(Status.variaveis);
+        String variaveisToSet = "";
+        for (String var: Status.variaveis.keySet())
+        {
+            Boolean value = Status.variaveis.get(var);
+
+            if (value) {
+                variaveisToSet += var + " => " + value + "\n";
+            } else {
+                variaveisToSet += var + " => " + value + "\n";
+            }
+        }
+
+        return(variaveisToSet);
     }
 
     protected static String converterInput(String texto) {
@@ -266,4 +365,52 @@ public class ProcessarController {
 
         return valorEsquerda;
     }
+
+
+    @FXML
+    protected void onHelpButtonClick(){
+
+        JLabel helpMessage = new JLabel(
+                "<html>" +
+                        "<div style='font-size: 11px;'>" +
+                            "<div><b>Instruções:</b></div>" +
+                            "<div style='margin: 10px 0 0 15px;'>" +
+                                "<div>" +
+                                    "<b>• Para programar: </b> 'VariávelDeDestino -> VariávelAReceber' e clique em 'Processar';" +
+                                "</div>" +
+                                "<br/>" +
+                                "<div>" +
+                                    "<b>• Ao receber um Erro: </b> Verifique a formatação do código e clique em 'Processar' novamente." +
+                                "</div>" +
+                                "<br/><br/>" +
+                            "</div>" +
+                        "</div>" +
+                    "</html>");
+
+        JOptionPane.showMessageDialog(null,
+                helpMessage,
+                "INSTRUÇÕES",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    @FXML
+    protected void onInfoButtonClick(){
+        JLabel infoMessage = new JLabel(
+                "<html>" +
+                        "<div style='font-size: 11px;'>" +
+                            "<b>Autores:</b>" +
+                            "<div style='margin-left: 10px;'>" +
+                                "Felipe Costa Godoi,<br/> " +
+                                "Guilherme Rodrigues de Melo,<br/> " +
+                                "Paulo Victor Ferreira da Cruz.<br/>" +
+                            "</div>" +
+                        "</div>" +
+                    "</html>");
+        JOptionPane.showMessageDialog(null,
+                infoMessage,
+                "INTEGRANTES",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+
 }

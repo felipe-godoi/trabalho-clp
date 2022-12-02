@@ -5,98 +5,74 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" prefHeight="564.0" prefWidth="800.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.clp.trabalho.ProcessarController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="539.0" prefWidth="780.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.clp.trabalho.ProcessarController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
-   <SplitPane dividerPositions="0.7651715039577837" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="35.0" prefWidth="746.0">
-     <items>
-         <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="33.0" prefWidth="570.0">
+   <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="499.0" prefWidth="777.0">
+      <children>
+         <Label layoutX="330.0" layoutY="6.0" text="CLP Programer" textAlignment="CENTER">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+         </Label>
+         <Button fx:id="info" layoutX="735.0" layoutY="6.0" mnemonicParsing="false" onAction="#onInfoButtonClick" prefHeight="25.0" prefWidth="28.0" text="i">
+            <font>
+               <Font size="14.0" />
+            </font>
+         </Button>
+         <Button fx:id="help" layoutX="701.0" layoutY="6.0" mnemonicParsing="false" onAction="#onHelpButtonClick" prefHeight="25.0" prefWidth="28.0" text="?">
+            <font>
+               <Font size="14.0" />
+            </font>
+         </Button>
+         <Pane layoutX="14.0" layoutY="52.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="404.0" prefWidth="376.0">
             <children>
-               <Label layoutX="309.0" layoutY="-1.0" text="CLP Programer" textAlignment="CENTER">
-                  <font>
-                     <Font name="System Bold" size="20.0" />
-                  </font>
-               </Label>
-            </children>
-         </Pane>
-         <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="33.0" prefWidth="175.0">
-            <children>
-               <Button layoutX="145.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="28.0" text="i">
-                  <font>
-                     <Font size="14.0" />
-                  </font>
-               </Button>
-               <Button layoutX="108.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="28.0" text="?">
-                  <font>
-                     <Font size="14.0" />
-                  </font>
-               </Button>
-            </children>
-         </Pane>
-     </items>
-   </SplitPane>
-   <SplitPane dividerPositions="0.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="408.0" prefWidth="746.0">
-      <items>
-         <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="418.0" prefWidth="376.0">
-            <children>
-               <TextArea fx:id="processarInput1" layoutX="3.0" layoutY="37.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="370.0" prefWidth="370.0" />
-               <Label layoutX="147.0" layoutY="10.0" text="Programação">
+               <TextArea fx:id="processarInput" layoutX="3.0" layoutY="45.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="355.0" prefWidth="370.0" />
+               <Label layoutX="147.0" layoutY="14.0" text="Programação">
                   <font>
                      <Font size="14.0" />
                   </font>
                </Label>
-               <Label layoutX="231.0" layoutY="12.0" prefHeight="17.0" prefWidth="14.0" text="*" textFill="RED">
+               <Label fx:id="hadEdit" layoutX="231.0" layoutY="16.0" prefHeight="17.0" prefWidth="14.0" text="*" textFill="RED">
                   <font>
                      <Font name="System Bold" size="14.0" />
                   </font>
                </Label>
             </children>
          </Pane>
-         <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
-           <items>
-               <SplitPane dividerPositions="0.29797979797979796" prefHeight="217.0" prefWidth="368.0">
-                 <items>
-                     <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="215.0" prefWidth="178.0">
-                        <children>
-                           <TextArea layoutX="3.0" layoutY="43.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="167.0" prefWidth="173.0" />
-                           <Label layoutX="63.0" layoutY="14.0" text="Entradas">
-                              <font>
-                                 <Font size="14.0" />
-                              </font>
-                           </Label>
-                        </children>
-                     </Pane>
-                     <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="217.0" prefWidth="178.0">
-                        <children>
-                           <TextArea layoutX="3.0" layoutY="43.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="167.0" prefWidth="173.0" />
-                           <Label layoutX="69.0" layoutY="14.0" text="Saídas">
-                              <font>
-                                 <Font size="14.0" />
-                              </font>
-                           </Label>
-                        </children>
-                     </Pane>
-                 </items>
-               </SplitPane>
-               <Pane prefHeight="214.0" prefWidth="372.0">
-                  <children>
-                     <Label layoutX="158.0" layoutY="1.0" prefHeight="26.0" prefWidth="60.0" text="Variáveis">
-                        <font>
-                           <Font size="14.0" />
-                        </font>
-                     </Label>
-                     <TextArea fx:id="processarInput" layoutX="5.0" layoutY="31.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="147.0" prefWidth="353.0" />
-                  </children>
-               </Pane>
-           </items>
-         </SplitPane>
-      </items>
-   </SplitPane>
-   <SplitPane dividerPositions="0.48214285714285715" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="41.0" prefWidth="226.0">
-      <items>
-          <Button onAction="#onEnviarButtonClick" prefHeight="26.0" prefWidth="105.0" text="Reset" />
-          <Button onAction="#onProcessarButtonClick" prefHeight="26.0" prefWidth="101.0" text="Processar" />
-      </items>
-   </SplitPane>
+         <Pane layoutX="401.0" layoutY="54.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="215.0" prefWidth="178.0">
+            <children>
+               <TextArea fx:id="entradas" cache="true" editable="false" layoutX="3.0" layoutY="43.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="167.0" prefWidth="173.0" wrapText="true" />
+               <Label layoutX="63.0" layoutY="14.0" text="Entradas">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </Label>
+            </children>
+         </Pane>
+         <Pane layoutX="586.0" layoutY="53.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="217.0" prefWidth="178.0">
+            <children>
+               <TextArea fx:id="saidas" layoutX="3.0" layoutY="43.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="167.0" prefWidth="173.0" />
+               <Label layoutX="69.0" layoutY="14.0" text="Saídas">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </Label>
+            </children>
+         </Pane>
+         <Pane layoutX="405.0" layoutY="270.0" prefHeight="223.0" prefWidth="358.0">
+            <children>
+               <Label layoutX="158.0" layoutY="1.0" prefHeight="26.0" prefWidth="60.0" text="Variáveis">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </Label>
+               <TextArea fx:id="variaveis" layoutX="-1.0" layoutY="27.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="194.0" prefWidth="358.0" />
+            </children>
+         </Pane>
+          <Button layoutX="17.0" layoutY="462.0" onAction="#onResetarButtonClick" prefHeight="26.0" prefWidth="105.0" text="Reset" />
+          <Button layoutX="286.0" layoutY="462.0" onAction="#onProcessarButtonClick" prefHeight="26.0" prefWidth="101.0" text="Processar" />
+      </children>
+   </Pane>
 </VBox>

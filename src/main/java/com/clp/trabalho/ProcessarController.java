@@ -32,6 +32,7 @@ public class ProcessarController {
         entradas.setText(getEntradas());
         saidas.setText(getSaidas());
         variaveis.setText(getVariaveis());
+        checkarAlteracoes();
     }
 
     @FXML
@@ -118,7 +119,11 @@ public class ProcessarController {
     @FXML
     protected void onResetarButtonClick(){
         processarInput.setText("");
+        Status.textareaInput = new String[]{""};
+        Status.variaveis.clear();
+        Status.resetOutput();
         lerInputs();
+        initialize();
     }
 
     public static void enviarOutputs() {
@@ -400,11 +405,15 @@ public class ProcessarController {
 
         JLabel helpMessage = new JLabel(
                 "<html>" +
-                        "<div style='font-size: 11px;'>" +
+                        "<div style='font-size: 10px;'>" +
                             "<div><b>Instruções:</b></div>" +
                             "<div style='margin: 10px 0 0 15px;'>" +
                                 "<div>" +
-                                    "<b>• Para programar: </b> 'VariávelDeDestino -> VariávelAReceber' e clique em 'Processar';" +
+                                    "<b>• Para programar: </b> Formate como 'Variável/Entrada -> Variável/Saída' e clique em 'Processar';" +
+                                "</div>" +
+                                "<br/>" +
+                                "<div>" +
+                                    "<b>• Símbolos Reservados: </b> '(' e ')' para priorizar, '&&' usados como 'and', '||' usados como 'or' e '!' para negar a senteça seguinte." +
                                 "</div>" +
                                 "<br/>" +
                                 "<div>" +
@@ -425,12 +434,12 @@ public class ProcessarController {
     protected void onInfoButtonClick(){
         JLabel infoMessage = new JLabel(
                 "<html>" +
-                        "<div style='font-size: 11px;'>" +
+                        "<div style='font-size: 10px;'>" +
                             "<b>Autores:</b>" +
-                            "<div style='margin-left: 10px;'>" +
+                            "<div style='margin: auto 5px 15px 10px;'>" +
                                 "Felipe Costa Godoi,<br/> " +
                                 "Guilherme Rodrigues de Melo,<br/> " +
-                                "Paulo Victor Ferreira da Cruz.<br/>" +
+                                "Paulo Victor Ferreira da Cruz." +
                             "</div>" +
                         "</div>" +
                     "</html>");

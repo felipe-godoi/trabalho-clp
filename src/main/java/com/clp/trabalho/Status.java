@@ -39,6 +39,18 @@ public class Status {
         comPort.openPort();
     }
 
+    public static void resetOutput() {
+        outputs.clear();
+        outputs.put("O1", false);
+        outputs.put("O2", false);
+        outputs.put("O3", false);
+        outputs.put("O4", false);
+        outputs.put("O5", false);
+        outputs.put("O6", false);
+        outputs.put("O7", false);
+        outputs.put("O8", false);
+    }
+
     public static void initializeStatus(String inputString) {
         inputString = inputString.strip();
 

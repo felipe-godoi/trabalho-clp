@@ -131,7 +131,7 @@ public class ProcessarController {
         Status.textareaInput = new String[]{""};
         Status.variaveis.clear();
         Status.resetOutput();
-        lerInputs();
+        requisitarInputs();
         initialize();
     }
 
@@ -183,9 +183,12 @@ public class ProcessarController {
                 atualizarInterface();
             }
         });
-        Status.comPort.writeBytes(new byte[]{'1', '0', '0', '0', '0', '1', '1', '1', '0'}, 9);
+        requisitarInputs();
     }
 
+    protected void requisitarInputs() {
+        Status.comPort.writeBytes(new byte[]{'1', '0', '0', '0', '0', '1', '1', '1', '0'}, 9);
+    }
 
     protected static String getEntradas() {
 

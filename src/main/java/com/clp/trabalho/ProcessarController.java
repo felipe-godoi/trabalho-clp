@@ -199,9 +199,13 @@ public class ProcessarController {
             Boolean value = Status.inputs.get(inputKey);
 
             if (value) {
-                entradaToSet += inputKey+" => Ligada\n";
+                entradaToSet += inputKey+" ➜ ✔ Ligada";
             } else {
-                entradaToSet += inputKey+" => Desligada\n";
+                entradaToSet += inputKey+" ➜ ❌ Desligada";
+            }
+
+            if(i!=8){
+                entradaToSet += "\n";
             }
         }
         return(entradaToSet);
@@ -216,9 +220,9 @@ public class ProcessarController {
             Boolean value = Status.outputs.get(outputKey);
 
             if (value) {
-                saidaToSet += outputKey+" => Ligada\n";
+                saidaToSet += outputKey+" ➜ ✔ Ligada\n";
             } else {
-                saidaToSet += outputKey+" => Desligada\n";
+                saidaToSet += outputKey+" ➜ ❌ Desligada\n";
             }
         }
 
@@ -232,9 +236,9 @@ public class ProcessarController {
             Boolean value = Status.variaveis.get(var);
 
             if (value) {
-                variaveisToSet += var + " => Ligada\n";
+                variaveisToSet += var + " ➜ ✔ Verdadeiro\n";
             } else {
-                variaveisToSet += var + " => Desligada\n";
+                variaveisToSet += var + " ➜ ❌ Falso\n";
             }
         }
 

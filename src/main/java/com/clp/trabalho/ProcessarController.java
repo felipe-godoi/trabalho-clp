@@ -39,6 +39,14 @@ public class ProcessarController {
     protected void onProcessarButtonClick() {
         Status.textareaInput = processarInput.getText().split("\n");
 
+        if (Status.textareaInput[0].length() == 0) {
+            JOptionPane.showMessageDialog(null,
+                    "Por favor, digite o código.",
+                    "ALERTA",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         try {
             hadEdit.setText("");
             ProcessarController.processarInput(Status.textareaInput);
@@ -96,13 +104,6 @@ public class ProcessarController {
 
     protected static void processarInput(String[] input) {
         Status.variaveis.clear();
-        if (input[0].length() == 0) {
-            JOptionPane.showMessageDialog(null,
-                    "Por favor, digite o código.",
-                    "ALERTA",
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
 
         for (int i = 0; i < input.length; i++) {
             String[] splitted = input[i].split("->");

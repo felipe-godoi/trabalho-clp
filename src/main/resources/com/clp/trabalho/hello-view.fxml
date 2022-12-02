@@ -53,7 +53,7 @@
          </Pane>
          <Pane layoutX="586.0" layoutY="53.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="217.0" prefWidth="178.0">
             <children>
-               <TextArea fx:id="saidas" layoutX="3.0" layoutY="43.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="167.0" prefWidth="173.0" />
+               <TextArea fx:id="saidas" editable="false" layoutX="3.0" layoutY="43.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="167.0" prefWidth="173.0" wrapText="true" />
                <Label layoutX="69.0" layoutY="14.0" text="Saídas">
                   <font>
                      <Font size="14.0" />
@@ -68,7 +68,7 @@
                      <Font size="14.0" />
                   </font>
                </Label>
-               <TextArea fx:id="variaveis" layoutX="-1.0" layoutY="27.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="194.0" prefWidth="358.0" />
+               <TextArea fx:id="variaveis" editable="false" layoutX="-1.0" layoutY="27.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="194.0" prefWidth="358.0" wrapText="true" />
             </children>
          </Pane>
           <Button layoutX="17.0" layoutY="462.0" onAction="#onResetarButtonClick" prefHeight="26.0" prefWidth="105.0" text="Reset" />

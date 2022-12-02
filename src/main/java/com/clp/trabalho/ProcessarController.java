@@ -39,28 +39,10 @@ public class ProcessarController {
     protected void onProcessarButtonClick() {
         Status.textareaInput = processarInput.getText().split("\n");
 
-        hadEdit.setText("");
-        ProcessarController.processarInput(Status.textareaInput);
-        initialize();
-    }
-
-    @FXML
-    protected void checkarAlteracoes() {
-        var anterior = Status.textareaInput;
-        var atual = processarInput.getText().split("\n");
-
         try {
-            if(concatenar(anterior).equals(concatenar(atual)))
-            {
-                hadEdit.setText("");
-            }
-            else {
-                hadEdit.setText("*");
-            }
-            JOptionPane.showMessageDialog(null,
-                        "Código compilado com Sucesso!",
-                        "SUCESSO",
-                        JOptionPane.INFORMATION_MESSAGE);
+            hadEdit.setText("");
+            ProcessarController.processarInput(Status.textareaInput);
+            initialize();
         }
         catch (Exception error)
         {
@@ -80,6 +62,25 @@ public class ProcessarController {
             }
             System.out.println("Erro identificado: " + error);
         }
+    }
+
+    @FXML
+    protected void checkarAlteracoes() {
+        var anterior = Status.textareaInput;
+        var atual = processarInput.getText().split("\n");
+
+        if(concatenar(anterior).equals(concatenar(atual)))
+        {
+            hadEdit.setText("");
+        }
+        else {
+            hadEdit.setText("*");
+        }
+        JOptionPane.showMessageDialog(null,
+                    "Código compilado com Sucesso!",
+                    "SUCESSO",
+                    JOptionPane.INFORMATION_MESSAGE);
+
     }
 
     public String concatenar(String[] toConcatena)

@@ -29,6 +29,11 @@ public class ProcessarController {
     @FXML
     public void initialize()
     {
+        lerInputs();
+        atualizarInterface();
+    }
+
+    public void atualizarInterface() {
         entradas.setText(getEntradas());
         saidas.setText(getSaidas());
         variaveis.setText(getVariaveis());
@@ -161,7 +166,7 @@ public class ProcessarController {
     }
 
     @FXML
-    public static void lerInputs(){
+    public void lerInputs(){
         Status.comPort.addDataListener(new SerialPortDataListener() {
             @Override
             public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_RECEIVED; }
@@ -174,6 +179,7 @@ public class ProcessarController {
                     inputs += (char)newData[i];
 
                 Status.initializeStatus(inputs);
+                atualizarInterface();
             }
         });
         Status.comPort.writeBytes(new byte[]{'1', '0', '0', '0', '0', '1', '1', '1', '0'}, 9);

@@ -131,7 +131,6 @@ public class ProcessarController {
         Status.textareaInput = new String[]{""};
         Status.variaveis.clear();
         Status.resetOutput();
-        requisitarInputs();
         initialize();
     }
 

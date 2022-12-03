@@ -31,7 +31,7 @@ public class Status {
     }};
     public static Map<String, Boolean> variaveis = new HashMap<String, Boolean>();
     public static SerialPort comPort;
-
+    public static int varredura = 200;
     public static String[] textareaInput = {""};
 
     public static void connectPort() throws Exception {

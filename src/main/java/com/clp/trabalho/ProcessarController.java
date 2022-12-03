@@ -168,22 +168,31 @@ public class ProcessarController {
 
     @FXML
     public void lerInputs(){
-        Status.comPort.addDataListener(new SerialPortDataListener() {
-            @Override
-            public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_RECEIVED; }
-            @Override
-            public void serialEvent(SerialPortEvent event)
-            {
-                String inputs = "";
-                byte[] newData = event.getReceivedData();
-                for (int i = 0; i < newData.length; ++i)
-                    inputs += (char)newData[i];
+        new Thread(() -> {
+            try {
+                while (true) {
+                    requisitarInputs();
 
-                Status.initializeStatus(inputs);
-                atualizarInterface();
+                    while (Status.comPort.bytesAvailable() == 0) {
+                        Thread.sleep(20);
+                    }
+
+                    byte[] readBuffer = new byte[Status.comPort.bytesAvailable()];
+                    Status.comPort.readBytes(readBuffer, readBuffer.length);
+
+                    String inputs = "";
+                    for (int i = 0; i < readBuffer.length; ++i)
+                        inputs += (char) readBuffer[i];
+
+                    Status.initializeStatus(inputs);
+                    atualizarInterface();
+
+                    Thread.sleep(Status.varredura);
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-        });
-        requisitarInputs();
+        }).start();
     }
 
     protected void requisitarInputs() {

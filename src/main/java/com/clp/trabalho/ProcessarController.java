@@ -59,7 +59,7 @@ public class ProcessarController {
         try {
             hadEdit.setText("");
             ProcessarController.processarInput(Status.textareaInput);
-            initialize();
+            atualizarInterface();
 
             JOptionPane.showMessageDialog(null,
                     "Código compilado com Sucesso!",
@@ -134,7 +134,7 @@ public class ProcessarController {
         Status.textareaInput = new String[]{""};
         Status.variaveis.clear();
         Status.resetOutput();
-        initialize();
+        atualizarInterface();
     }
 
     public static void enviarOutputs() {
@@ -153,11 +153,12 @@ public class ProcessarController {
 
         System.out.println(output);
 
-        Status.comPort.writeBytes(output.getBytes(), output.length());
+            Status.comPort.writeBytes(output.getBytes(), output.length());
     }
 
     @FXML
     public void lerInputs(){
+        System.out.println("Criou uma thread");
         new Thread(() -> {
             try {
                 while (true) {
@@ -170,7 +171,6 @@ public class ProcessarController {
                     if (Status.comPort.bytesAvailable() == -1) {
                         System.out.println("DEU -1");
                     } else {
-                        System.out.println(Status.comPort.bytesAvailable());
                         byte[] readBuffer = new byte[Status.comPort.bytesAvailable()];
                         int numRead = Status.comPort.readBytes(readBuffer, readBuffer.length);
 

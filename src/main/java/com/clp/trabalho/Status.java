@@ -45,7 +45,11 @@ public class Status {
         if(comPort != null)
             comPort.openPort();
         else
-            throw new Exception("Arduino não encontrado");
+            throw new Exception("A comunicação com Arduino não pode ser estabelecida com sucesso! Tente novamente!.");
+
+        if (!comPort.isOpen()) {
+            throw new Exception("Não foi possível estabelecer a conexão com o Arduino!");
+        }
     }
 
     public static void resetOutput() {

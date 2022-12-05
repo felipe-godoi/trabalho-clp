@@ -78,7 +78,6 @@ public class ProcessarController {
                         "ERRO",
                         JOptionPane.ERROR_MESSAGE);
             }
-            System.out.println("Erro identificado: " + error);
         }
     }
 
@@ -148,21 +147,9 @@ public class ProcessarController {
             }
         }
 
+        System.out.println(output);
+
         Status.comPort.writeBytes(output.getBytes(), output.length());
-    }
-
-    public static String binToDec(String bin) {
-        int sum = 0;
-        int j = 1;
-        for (int i = 7; i >= 0; i --) {
-            if (bin.charAt(i) == '1') {
-                sum += j;
-            }
-
-            j = j*2;
-        }
-
-        return String.valueOf(sum);
     }
 
     @FXML
@@ -177,7 +164,7 @@ public class ProcessarController {
                     }
 
                     byte[] readBuffer = new byte[Status.comPort.bytesAvailable()];
-                    Status.comPort.readBytes(readBuffer, readBuffer.length);
+                    int numRead = Status.comPort.readBytes(readBuffer, readBuffer.length);
 
                     String inputs = "";
                     for (int i = 0; i < readBuffer.length; ++i)
@@ -192,6 +179,20 @@ public class ProcessarController {
                 throw new RuntimeException(e);
             }
         }).start();
+    }
+
+    public static String binToDec(String bin) {
+        int sum = 0;
+        int j = 1;
+        for (int i = 7; i >= 0; i --) {
+            if (bin.charAt(i) == '1') {
+                sum += j;
+            }
+
+            j = j*2;
+        }
+
+        return String.valueOf(sum);
     }
 
     protected void requisitarInputs() {

@@ -22,7 +22,7 @@ public class ProcessarApplication extends Application {
             stage.show();
         } catch (Exception e){
             JOptionPane.showMessageDialog(null,
-                    "A comunicação com Arduino não pode ser estabelecida com sucesso! Tente novamente!.",
+                    e.getMessage(),
                     "ERRO",
                     JOptionPane.ERROR_MESSAGE);
         }

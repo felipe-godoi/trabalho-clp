@@ -66,6 +66,7 @@ public class Status {
 
     public static void initializeStatus(String inputString) {
         inputString = inputString.strip();
+        inputString = inputString.substring(0, 9);
 
         Map<String, Boolean> inputsCache = new HashMap<String, Boolean>();
         variaveis.clear();

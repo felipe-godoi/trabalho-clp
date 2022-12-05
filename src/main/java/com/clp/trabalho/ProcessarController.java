@@ -3,7 +3,7 @@ package com.clp.trabalho;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import com.fazecast.jSerialComm.*;
+import javafx.scene.control.TextField;
 
 import javax.swing.*;
 import java.util.*;
@@ -24,6 +24,9 @@ public class ProcessarController {
     @FXML
     private Label hadEdit;
 
+    @FXML
+    private TextField varredura;
+
     public static List<Character> palavrasReservadas = Arrays.asList('+', '*', '!', '=', '(',  ')');
 
     @FXML
@@ -37,6 +40,7 @@ public class ProcessarController {
         entradas.setText(getEntradas());
         saidas.setText(getSaidas());
         variaveis.setText(getVariaveis());
+        varredura.setText(String.valueOf(Status.varredura));
         checkarAlteracoes();
     }
 
@@ -426,6 +430,34 @@ public class ProcessarController {
 
 
     @FXML
+    protected void onVarreduraBtnClck(){
+
+        try {
+            if(varredura != null && Integer.parseInt(varredura.getText()) > 0 && Integer.parseInt(varredura.getText()) < 9999)
+            {
+                var newVarredura = Integer.parseInt(varredura.getText());
+                Status.varredura = newVarredura;
+                System.out.println("Varredura = " + Status.varredura);
+            }
+            else{
+                JOptionPane.showMessageDialog(null,
+                        "Varredura inválida! Verifique a regra no botão de Ajuda ('?').",
+                        "ERRO",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        catch(NumberFormatException e)
+        {
+            JOptionPane.showMessageDialog(null,
+                    "Verifique a varredura a ser atualizada. Digite um valor válido!",
+                    "ERRO",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+
+
+    @FXML
     protected void onHelpButtonClick(){
 
         JLabel helpMessage = new JLabel(
@@ -439,6 +471,10 @@ public class ProcessarController {
                                 "<br/>" +
                                 "<div>" +
                                     "<b>• Símbolos Reservados: </b> '(' e ')' para priorizar, '&&' ou '*' usados como 'and', '||' ou '+' usados como 'or' e '!' para negar a senteça seguinte." +
+                                "</div>" +
+                                "<br/>" +
+                                "<div>" +
+                                    "<b>• Varredura: </b> É medida em milisegundos, pode ser atualizada digitando o número no campo de texto (0 - 9999) e clicando em 'Atualizar'." +
                                 "</div>" +
                                 "<br/>" +
                                 "<div>" +

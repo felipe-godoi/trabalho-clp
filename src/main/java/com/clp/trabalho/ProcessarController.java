@@ -163,6 +163,11 @@ public class ProcessarController {
                         Thread.sleep(20);
                     }
 
+                    while (Status.comPort.bytesAvailable() == -1) {
+                        Status.comPort.openPort();
+                        Thread.sleep(20);
+                    }
+
                     byte[] readBuffer = new byte[Status.comPort.bytesAvailable()];
                     int numRead = Status.comPort.readBytes(readBuffer, readBuffer.length);
 

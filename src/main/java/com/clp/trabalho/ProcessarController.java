@@ -170,6 +170,7 @@ public class ProcessarController {
                     if (Status.comPort.bytesAvailable() == -1) {
                         System.out.println("DEU -1");
                     } else {
+                        System.out.println(Status.comPort.bytesAvailable());
                         byte[] readBuffer = new byte[Status.comPort.bytesAvailable()];
                         int numRead = Status.comPort.readBytes(readBuffer, readBuffer.length);
 

@@ -167,22 +167,21 @@ public class ProcessarController {
                         Thread.sleep(20);
                     }
 
-                    while (Status.comPort.bytesAvailable() == -1) {
-                        Status.comPort.openPort();
-                        Thread.sleep(20);
+                    if (Status.comPort.bytesAvailable() == -1) {
+                        System.out.println("DEU -1");
+                    } else {
+                        byte[] readBuffer = new byte[Status.comPort.bytesAvailable()];
+                        int numRead = Status.comPort.readBytes(readBuffer, readBuffer.length);
+
+                        String inputs = "";
+                        for (int i = 0; i < readBuffer.length; ++i)
+                            inputs += (char) readBuffer[i];
+
+                        Status.initializeStatus(inputs);
+                        atualizarInterface();
+
+                        Thread.sleep(Status.varredura);
                     }
-
-                    byte[] readBuffer = new byte[Status.comPort.bytesAvailable()];
-                    int numRead = Status.comPort.readBytes(readBuffer, readBuffer.length);
-
-                    String inputs = "";
-                    for (int i = 0; i < readBuffer.length; ++i)
-                        inputs += (char) readBuffer[i];
-
-                    Status.initializeStatus(inputs);
-                    atualizarInterface();
-
-                    Thread.sleep(Status.varredura);
                 }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);

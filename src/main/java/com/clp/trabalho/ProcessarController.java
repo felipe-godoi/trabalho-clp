@@ -153,7 +153,7 @@ public class ProcessarController {
 
         System.out.println(output);
 
-            Status.comPort.writeBytes(output.getBytes(), output.length());
+        Status.comPort.writeBytes(output.getBytes(), output.length());
     }
 
     @FXML
@@ -162,6 +162,7 @@ public class ProcessarController {
         new Thread(() -> {
             try {
                 while (true) {
+                    System.out.println("Ler inputs...");
                     requisitarInputs();
 
                     while (Status.comPort.bytesAvailable() == 0) {
@@ -188,20 +189,6 @@ public class ProcessarController {
                 throw new RuntimeException(e);
             }
         }).start();
-    }
-
-    public static String binToDec(String bin) {
-        int sum = 0;
-        int j = 1;
-        for (int i = 7; i >= 0; i --) {
-            if (bin.charAt(i) == '1') {
-                sum += j;
-            }
-
-            j = j*2;
-        }
-
-        return String.valueOf(sum);
     }
 
     protected void requisitarInputs() {

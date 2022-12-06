@@ -4,8 +4,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
+import org.w3c.dom.Text;
 
 import javax.swing.*;
+import java.io.*;
+import java.io.BufferedReader;
 import java.util.*;
 
 import static javax.swing.JOptionPane.showMessageDialog;
@@ -461,6 +465,56 @@ public class ProcessarController {
         }
     }
 
+    @FXML
+    protected void saveCode() throws IOException{
+        try {
+            String filename = "src\\" + (JOptionPane.showInputDialog("Nome do arquivo: ")) + ".txt";
+            FileWriter myWriter = new FileWriter(filename);
+            myWriter.write(processarInput.getText());
+            myWriter.close();
+            JOptionPane.showMessageDialog(null,
+                    "Código salvo com sucesso!",
+                    "SUCESSO!",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
+        catch (IOException e)
+        {
+            System.out.println("erro: " + e);
+            JOptionPane.showMessageDialog(null,
+                    "Erro ao exportar o Código:" + e,
+                    "ERRO",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    @FXML
+    protected void importCode() throws IOException{
+        try {
+            String filePath = "src\\" + (JOptionPane.showInputDialog("Nome do arquivo a ser importado da raíz do projeto: ")) + ".txt";
+            FileInputStream fis = new FileInputStream(filePath);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+
+            String line = br.readLine();
+            String code = "";
+
+            while (line != null) {
+                code += line + "\n";
+                line = br.readLine();
+            }
+
+            processarInput.setText(code.replaceAll("null", ""));
+            br.close();
+        }
+        catch (IOException e)
+        {
+            System.out.println("erro: " + e);
+            JOptionPane.showMessageDialog(null,
+                    "Erro ao importar o Código:" + e,
+                    "ERRO",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
 
     @FXML
@@ -481,6 +535,11 @@ public class ProcessarController {
                                 "<br/>" +
                                 "<div>" +
                                     "<b>• Varredura: </b> É medida em milisegundos, pode ser atualizada digitando o número no campo de texto (0 - 9999) e clicando em 'Atualizar'." +
+                                "</div>" +
+                                "<br/>" +
+                                "<div>" +
+                                    "<b>• Importar Arquivo: </b> É importado da pasta src do projeto." +
+                                    "<b>• Exportar Arquivo: </b> É exportado da pasta src do projeto." +
                                 "</div>" +
                                 "<br/>" +
                                 "<div>" +

@@ -31,7 +31,7 @@ public class Status {
     }};
     public static Map<String, Boolean> variaveis = new HashMap<String, Boolean>();
     public static SerialPort comPort;
-    public static int varredura = 200;
+    public static int varredura = 50;
     public static String[] textareaInput = {""};
 
     public static void connectPort() throws Exception {
@@ -66,8 +66,9 @@ public class Status {
 
     public static void initializeStatus(String inputString) {
         inputString = inputString.strip();
+        inputString = inputString.substring(0, 9);
 
-        inputs.clear();
+        Map<String, Boolean> inputsCache = new HashMap<String, Boolean>();
         variaveis.clear();
 
         int j = inputString.length();
@@ -77,16 +78,18 @@ public class Status {
             String inputKey = "I"+ j;
 
             if (input == '1') {
-                inputs.put(inputKey, true);
+                inputsCache.put(inputKey, true);
             } else {
-                inputs.put(inputKey, false);
+                inputsCache.put(inputKey, false);
             }
 
             j--;
         }
 
-        inputs.put("1", true);
-        inputs.put("0", false);
+        inputsCache.put("1", true);
+        inputsCache.put("0", false);
+
+        inputs = inputsCache;
 
         ProcessarController.processarInput(Status.textareaInput);
         ProcessarController.enviarOutputs();

@@ -63,7 +63,7 @@ public class ProcessarController {
         try {
             hadEdit.setText("");
             ProcessarController.processarInput(Status.textareaInput);
-            initialize();
+            atualizarInterface();
 
             JOptionPane.showMessageDialog(null,
                     "Código compilado com Sucesso!",
@@ -138,7 +138,7 @@ public class ProcessarController {
         Status.textareaInput = new String[]{""};
         Status.variaveis.clear();
         Status.resetOutput();
-        initialize();
+        atualizarInterface();
     }
 
     public static void enviarOutputs() {
@@ -162,50 +162,37 @@ public class ProcessarController {
 
     @FXML
     public void lerInputs(){
+        System.out.println("Criou uma thread");
         new Thread(() -> {
             try {
                 while (true) {
+                    System.out.println("Ler inputs...");
                     requisitarInputs();
 
                     while (Status.comPort.bytesAvailable() == 0) {
                         Thread.sleep(20);
                     }
 
-                    while (Status.comPort.bytesAvailable() == -1) {
-                        Status.comPort.openPort();
-                        Thread.sleep(20);
+                    if (Status.comPort.bytesAvailable() == -1) {
+                        System.out.println("DEU -1");
+                    } else {
+                        byte[] readBuffer = new byte[Status.comPort.bytesAvailable()];
+                        int numRead = Status.comPort.readBytes(readBuffer, readBuffer.length);
+
+                        String inputs = "";
+                        for (int i = 0; i < readBuffer.length; ++i)
+                            inputs += (char) readBuffer[i];
+
+                        Status.initializeStatus(inputs);
+                        atualizarInterface();
+
+                        Thread.sleep(Status.varredura);
                     }
-
-                    byte[] readBuffer = new byte[Status.comPort.bytesAvailable()];
-                    int numRead = Status.comPort.readBytes(readBuffer, readBuffer.length);
-
-                    String inputs = "";
-                    for (int i = 0; i < readBuffer.length; ++i)
-                        inputs += (char) readBuffer[i];
-
-                    Status.initializeStatus(inputs);
-                    atualizarInterface();
-
-                    Thread.sleep(Status.varredura);
                 }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }).start();
-    }
-
-    public static String binToDec(String bin) {
-        int sum = 0;
-        int j = 1;
-        for (int i = 7; i >= 0; i --) {
-            if (bin.charAt(i) == '1') {
-                sum += j;
-            }
-
-            j = j*2;
-        }
-
-        return String.valueOf(sum);
     }
 
     protected void requisitarInputs() {

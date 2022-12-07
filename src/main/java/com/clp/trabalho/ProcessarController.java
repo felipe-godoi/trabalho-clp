@@ -162,12 +162,13 @@ public class ProcessarController {
 
     @FXML
     public void lerInputs(){
-        System.out.println("Criou uma thread");
+        OutputStream outputStream = Status.comPort.getOutputStream();
+
         new Thread(() -> {
             try {
                 while (true) {
                     System.out.println("Ler inputs...");
-                    requisitarInputs();
+                    outputStream.write("100001110".getBytes());
 
                     while (Status.comPort.bytesAvailable() == 0) {
                         Thread.sleep(20);
@@ -191,16 +192,10 @@ public class ProcessarController {
                 }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }).start();
-    }
-
-    protected void requisitarInputs() {
-        try {
-            Status.comPort.writeBytes(new byte[]{'1', '0', '0', '0', '0', '1', '1', '1', '0'}, 9);
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
     }
 
     protected static String getEntradas() {

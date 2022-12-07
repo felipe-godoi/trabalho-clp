@@ -42,6 +42,8 @@ public class Status {
             }
         }
 
+        comPort.openPort();
+
         if(comPort != null)
             comPort.openPort();
         else

@@ -196,7 +196,11 @@ public class ProcessarController {
     }
 
     protected void requisitarInputs() {
-        Status.comPort.writeBytes(new byte[]{'1', '0', '0', '0', '0', '1', '1', '1', '0'}, 9);
+        try {
+            Status.comPort.writeBytes(new byte[]{'1', '0', '0', '0', '0', '1', '1', '1', '0'}, 9);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     protected static String getEntradas() {

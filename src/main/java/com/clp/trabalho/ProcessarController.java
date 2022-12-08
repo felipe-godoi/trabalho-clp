@@ -141,9 +141,9 @@ public class ProcessarController {
         atualizarInterface();
     }
 
-    public static void enviarOutputs() {
+    public void enviarOutputs(OutputStream outputStream) {
         String output = "";
-
+        System.out.println("ENVIANDO OUTPUTS");
         for (int i = 8; i > 0; i--) {
             String outputKey = "O" + i;
             Boolean value = Status.outputs.get(outputKey);
@@ -157,43 +157,51 @@ public class ProcessarController {
 
         System.out.println(output);
 
-        Status.comPort.writeBytes(output.getBytes(), output.length());
+        try {
+            outputStream.write(output.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //.writeBytes(output.getBytes(), output.length());
     }
 
     @FXML
     public void lerInputs(){
-        OutputStream outputStream = Status.comPort.getOutputStream();
-
         new Thread(() -> {
+            OutputStream outputStream = Status.comPort.getOutputStream();
+            InputStream inputStream = Status.comPort.getInputStream();
             try {
                 while (true) {
                     System.out.println("Ler inputs...");
-                    outputStream.write("100001110".getBytes());
 
-                    while (Status.comPort.bytesAvailable() == 0) {
-                        Thread.sleep(20);
-                    }
+                    Thread.sleep(Status.varredura);
+                    System.out.println(inputStream.available());
+                    if(inputStream.available() > 0){
 
-                    if (Status.comPort.bytesAvailable() == -1) {
-                        System.out.println("DEU -1");
-                    } else {
-                        byte[] readBuffer = new byte[Status.comPort.bytesAvailable()];
-                        int numRead = Status.comPort.readBytes(readBuffer, readBuffer.length);
-
+                        int readOneByASCII;
                         String inputs = "";
-                        for (int i = 0; i < readBuffer.length; ++i)
-                            inputs += (char) readBuffer[i];
+                        do{
+                            readOneByASCII = inputStream.read();
+                            char letraEscrita = (char)readOneByASCII;
+                            inputs = inputs+letraEscrita;
+                        }
+                        while (readOneByASCII != 10);
 
-                        Status.initializeStatus(inputs);
-                        atualizarInterface();
+                        inputs.trim();
+                        System.out.println(inputs.length());
+                        if(inputs.length() == 11){
+                            System.out.println("aqui");
+                            Status.initializeStatus(inputs.substring(0,9));
+                            this.enviarOutputs(outputStream);
 
-                        Thread.sleep(Status.varredura);
+                            atualizarInterface();
+                        }
                     }
                 }
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                //throw new RuntimeException(e);
+            } catch (Exception e) {
+                //throw new RuntimeException(e);
             }
         }).start();
     }
@@ -505,7 +513,6 @@ public class ProcessarController {
 
     @FXML
     protected void onHelpButtonClick(){
-
         JLabel helpMessage = new JLabel(
                 "<html>" +
                         "<div style='font-size: 10px;'>" +

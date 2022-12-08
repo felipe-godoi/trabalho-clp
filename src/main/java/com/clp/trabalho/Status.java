@@ -31,7 +31,7 @@ public class Status {
     }};
     public static Map<String, Boolean> variaveis = new HashMap<String, Boolean>();
     public static SerialPort comPort;
-    public static int varredura = 50;
+    public static int varredura = 100;
     public static String[] textareaInput = {""};
 
     public static void connectPort() throws Exception {
@@ -39,6 +39,7 @@ public class Status {
         for(SerialPort port : comPorts){
             if(port.getPortDescription().equals("USB2.0-Serial")){
                 comPort = port;
+                comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0);
             }
         }
 
@@ -92,6 +93,5 @@ public class Status {
         inputs = inputsCache;
 
         ProcessarController.processarInput(Status.textareaInput);
-        ProcessarController.enviarOutputs();
     }
 }
